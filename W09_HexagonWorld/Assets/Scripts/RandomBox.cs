@@ -6,6 +6,7 @@ public class RandomBox : MonoBehaviour
 {
     [SerializeField] List<GameObject> ItemList;
     [SerializeField] float spawnTime = 1f;
+    [SerializeField] Transform gaugeBar;
     float time = 0f;
 
     public void Init(List<GameObject> list)
@@ -18,7 +19,8 @@ public class RandomBox : MonoBehaviour
 
     private void Update()
     {
-        time += Time.deltaTime; 
+        time += Time.deltaTime;
+        gaugeBar.localScale = new Vector3(1f * time / spawnTime, gaugeBar.localScale.y, gaugeBar.localScale.z);
         if (time > spawnTime)
         {
             CreateItem();
