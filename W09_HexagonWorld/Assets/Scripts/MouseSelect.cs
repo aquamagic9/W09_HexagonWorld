@@ -11,6 +11,7 @@ public class MouseSelect : MonoBehaviour
 
     GameObject SelectedItem = null;
     GameObject RecentSelectedTile;
+    HexTileMapGenerator.TileInfo PrevSelectedTile;
     Vector2 mousePosition;
     Vector2 prevMousePosition;
     Color originColor;
@@ -70,6 +71,7 @@ public class MouseSelect : MonoBehaviour
                 SelectedItem = hitData.transform.gameObject;
                 HexTileMapGenerator.MapLists[y][x].item = null;
                 TileMapManager.Instance.CheckCraftableTile(x, y);
+                PrevSelectedTile = HexTileMapGenerator.MapLists[y][x];
             }
             else
             {
@@ -145,8 +147,16 @@ public class MouseSelect : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && SelectedItem != null)
         {
             Selecting = false;
-            SelectedItem.transform.position = RecentSelectedTile.transform.position;
-            HexTileMapGenerator.MapLists[y][x].item = SelectedItem;
+            if (HexTileMapGenerator.MapLists[y][x].item == null)
+            {
+                SelectedItem.transform.position = RecentSelectedTile.transform.position;
+                HexTileMapGenerator.MapLists[y][x].item = SelectedItem;
+            }
+            else
+            {
+                SelectedItem.transform.position = PrevSelectedTile.baseTile.transform.position;
+                HexTileMapGenerator.MapLists[PrevSelectedTile.y][PrevSelectedTile.x].item = SelectedItem;
+            }
             ItemManager.Instance.SetItemPos(SelectedItem.GetComponent<ItemPos>(), x, y);
             TileMapManager.Instance.CheckCraftableTile(x, y);
             HexTileMapGenerator.MapLists[y][x].baseTile.GetComponentInChildren<TextMeshProUGUI>().enabled = false;

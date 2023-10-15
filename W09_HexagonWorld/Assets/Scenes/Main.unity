@@ -320,7 +320,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1177084073090912513, guid: b8a7109cc60dafb4b932f9af9aec8200, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1177084073090912513, guid: b8a7109cc60dafb4b932f9af9aec8200, type: 3}
       propertyPath: m_LocalScale.x
@@ -506,7 +506,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4836387528004952549, guid: 68666a0fbe4eed84f95eb9f96495e5c7, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4836387528004952549, guid: 68666a0fbe4eed84f95eb9f96495e5c7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -616,7 +616,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &811530498
 PrefabInstance:
@@ -794,8 +794,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   recipes:
   - Coal2Wood4
+  - Branch3Coal2FireStone1
   recipeResults:
-  - {fileID: 4108361303316358476, guid: aa41668195ed8634280535c79ebee0af, type: 3}
+  - {fileID: 4700349737357192760, guid: e8d1c84f496ddad4faae74f37136fc4d, type: 3}
+  - {fileID: 2117273207614799369, guid: 235dd862923c0aa4cb64bce5bd5d0d2b, type: 3}
 --- !u!4 &1107308449
 Transform:
   m_ObjectHideFlags: 0
@@ -809,7 +811,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1382725994
 PrefabInstance:
@@ -1015,7 +1017,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2096674517
 PrefabInstance:
