@@ -7,15 +7,17 @@ public class HexTileMapGenerator : MonoBehaviour
 {
     public class TileInfo
     {
-        public TileInfo(int x, int y, GameObject item)
+        public TileInfo(int x, int y, GameObject item, GameObject baseTile)
         {
             this.x = x;
             this.y = y;
             this.item = item;
+            this.baseTile = baseTile;
         }
         public int x { get; set; }
         public int y { get; set; }
         public GameObject item { get; set; }
+        public GameObject baseTile { get; set; }
     }
     
     public static List<List<TileInfo>> MapLists;
@@ -55,7 +57,7 @@ public class HexTileMapGenerator : MonoBehaviour
                 }
                 SetTileInfo(TempGO, x, y);
                 
-                TileInfo TempTile = new TileInfo(x, y, null);
+                TileInfo TempTile = new TileInfo(x, y, null, TempGO);
                 MapLists[y].Add(TempTile);
 
             }

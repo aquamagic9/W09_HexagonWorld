@@ -4,28 +4,34 @@ using UnityEngine;
 
 public class MouseSelect : MonoBehaviour
 {
+    [SerializeField] float max = 10f;
+    [SerializeField] float min = 3f;
+    [SerializeField] float zoomSpeed = 2f;
+
     GameObject SelectedItem = null;
     GameObject RecentSelectedTile;
     Vector2 mousePosition;
+    Vector2 prevMousePosition;
     Color originColor;
     int x, y;
     bool Selecting = false;
-    // Start is called before the first frame update
     void Awake()
     {
         originColor = GetComponent<MeshRenderer>().material.color;
         Selecting = false;
+        mousePosition = new Vector2(0f, 0f);
     }
 
-    // Update is called once per frame
     void Update()
     {
+        prevMousePosition = mousePosition;
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         this.transform.position = mousePosition;
         SetActiveSelf();
         SelectItem();
-        DragingItem();
+        Draging();
         PutItem();
+        CameraZoomInZoomOut();
     }
 
     void SetActiveSelf()
@@ -37,7 +43,7 @@ public class MouseSelect : MonoBehaviour
             GetComponent<MeshRenderer>().enabled = true;
             GetComponent<MeshRenderer>().material.color = originColor;
             this.transform.position = hitData.transform.position;
-            string []splitData = hitData.transform.name.Split(',');
+            string[] splitData = hitData.transform.name.Split(',');
             RecentSelectedTile = hitData.transform.gameObject;
             x = int.Parse(splitData[0]);
             y = int.Parse(splitData[1]);
@@ -65,16 +71,68 @@ public class MouseSelect : MonoBehaviour
             }
             else
             {
+                Debug.Log("빈공간!");
                 SelectedItem = null;
+                CombineItems();
             }
         }
     }
 
-    void DragingItem()
+    void CombineItems()
+    {
+        if (HexTileMapGenerator.MapLists[y][x].item == null && TileMapManager.Instance.CheckAroundSixTiles(x, y))
+        {
+            Debug.Log("6개 존재 확인!");
+            //조합법을 읽고 하나를 생성
+            ItemManager.Instance.SpawnItem(RecentSelectedTile.transform.position, x, y);
+
+            Debug.Log("아이템 스폰!");
+            //주위의 6개의 타일에 있던 정보와 object 제거함
+            TileMapManager.Instance.DeleteAroundSixTiles(x, y);
+        }
+    }
+
+    void Draging()
+    {
+        if (CanDragingItem())
+        {
+            SelectedItem.transform.position = mousePosition;
+        }
+        else if (CanDragingCamera())
+        {
+            Vector2 movement = prevMousePosition - mousePosition;
+            Camera.main.transform.Translate(new Vector3(movement.x, movement.y, 0) * Time.deltaTime * 100f);
+        }
+    }
+
+    bool CanDragingItem()
     {
         if (Selecting && Input.GetMouseButton(0) && SelectedItem != null)
         {
-            SelectedItem.transform.position = mousePosition;
+            return true;
+        }
+        return false;
+    }
+
+    bool CanDragingCamera()
+    {
+        if (Selecting && Input.GetMouseButton(0) && SelectedItem == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    void CameraZoomInZoomOut()
+    {
+        Camera.main.orthographicSize += Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        if (Camera.main.orthographicSize > max)
+        {
+            Camera.main.orthographicSize = max;
+        }
+        else if (Camera.main.orthographicSize < min)
+        {
+            Camera.main.orthographicSize = min;
         }
     }
 
@@ -86,6 +144,7 @@ public class MouseSelect : MonoBehaviour
             SelectedItem.transform.position = RecentSelectedTile.transform.position;
             Debug.Log(x + ":" + y);
             HexTileMapGenerator.MapLists[y][x].item = SelectedItem;
+            ItemManager.Instance.SetItemPos(SelectedItem.GetComponent<ItemPos>(), x, y);
             SelectedItem = null;
         }
     }

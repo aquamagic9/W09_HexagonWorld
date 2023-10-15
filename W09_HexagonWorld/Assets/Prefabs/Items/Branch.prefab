@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1484284774920209774}
   - component: {fileID: 1452952537140611504}
   - component: {fileID: -2933628676574674692}
+  - component: {fileID: -6338240726379183766}
   m_Layer: 0
   m_Name: Branch
   m_TagString: Untagged
@@ -111,6 +112,20 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
+--- !u!114 &-6338240726379183766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1499305794124467628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e919d1afea30b84cb08c928c1ea6899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0
 --- !u!1 &3591428355546855779
 GameObject:
   m_ObjectHideFlags: 0

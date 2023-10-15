@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileMap : MonoBehaviour
+public class TileMapManager : Singleton<TileMapManager>
 {
-    public bool CheckAroundTile(int targetX, int targetY)
+    public bool CheckAroundSixTiles(int targetX, int targetY)
     {
         int x, y;
         for (int i = -1; i <= 1; i++)
@@ -15,7 +15,9 @@ public class TileMap : MonoBehaviour
                 {
                     continue;
                 }
-                y = targetY + i; x = targetX + j;
+                x = targetX + i;
+                y = targetY + j;
+                Debug.Log("x:" + x + " y:" + y);
                 if (!CheckMapSizeIndex(x, y))
                 {
                     continue;
@@ -28,7 +30,7 @@ public class TileMap : MonoBehaviour
         return true;
     }
 
-    public bool CheckAroundThreeTopTile(int targetX, int targetY)
+    public void DeleteAroundSixTiles(int targetX, int targetY)
     {
         int x, y;
         for (int i = -1; i <= 1; i++)
@@ -39,18 +41,72 @@ public class TileMap : MonoBehaviour
                 {
                     continue;
                 }
-                y = targetY + i; x = targetX + j;
+                x = targetX + i;
+                y = targetY + j;
+                if (!CheckMapSizeIndex(x, y))
+                {
+                    continue;
+                }
+                HexTileMapGenerator.TileInfo tempTile = HexTileMapGenerator.MapLists[y][x];
+                if (tempTile.item != null)
+                {
+                    Destroy(tempTile.item);
+                    tempTile.item = null;
+                }
+            }
+        }
+    }
+
+    public Vector2 ReturnAroundEmptyPosition(int targetX, int targetY)
+    {
+        int x, y;
+        for (int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
+            {
+                if (CheckY(targetY, i, j))
+                {
+                    continue;
+                }
+                x = targetX + i;
+                y = targetY + j;
                 if (!CheckMapSizeIndex(x, y))
                 {
                     continue;
                 }
                 HexTileMapGenerator.TileInfo tempTile = HexTileMapGenerator.MapLists[y][x];
                 if (tempTile.item == null)
-                    return false;
+                {
+                    return new Vector2(x, y);
+                }
             }
         }
-        return true;
+        return new Vector2(-1, -1);
     }
+
+    //public bool CheckAroundThreeTopTile(int targetX, int targetY)
+    //{
+    //    int x, y;
+    //    for (int i = -1; i <= 1; i++)
+    //    {
+    //        for (int j = -1; j <= 1; j++)
+    //        {
+    //            if (CheckY(targetY, i, j))
+    //            {
+    //                continue;
+    //            }
+    //            y = targetY + i; x = targetX + j;
+    //            if (!CheckMapSizeIndex(x, y))
+    //            {
+    //                continue;
+    //            }
+    //            HexTileMapGenerator.TileInfo tempTile = HexTileMapGenerator.MapLists[y][x];
+    //            if (tempTile.item == null)
+    //                return false;
+    //        }
+    //    }
+    //    return true;
+    //}
 
     bool CheckY(int targetY, int i, int j)
     {
