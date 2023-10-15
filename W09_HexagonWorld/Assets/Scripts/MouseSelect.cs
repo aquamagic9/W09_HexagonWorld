@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MouseSelect : MonoBehaviour
 {
@@ -68,6 +69,7 @@ public class MouseSelect : MonoBehaviour
             {
                 SelectedItem = hitData.transform.gameObject;
                 HexTileMapGenerator.MapLists[y][x].item = null;
+                TileMapManager.Instance.CheckCraftableTile(x, y);
             }
             else
             {
@@ -84,11 +86,13 @@ public class MouseSelect : MonoBehaviour
         {
             Debug.Log("6개 존재 확인!");
             //조합법을 읽고 하나를 생성
-            ItemManager.Instance.SpawnItem(RecentSelectedTile.transform.position, x, y);
-
+            GameObject craftedItem = CraftingManager.Instance.TargetPositionTileToRecipeResult(x, y);
+            ItemManager.Instance.SpawnItem(craftedItem, RecentSelectedTile.transform.position, x, y);
             Debug.Log("아이템 스폰!");
+            
             //주위의 6개의 타일에 있던 정보와 object 제거함
             TileMapManager.Instance.DeleteAroundSixTiles(x, y);
+            HexTileMapGenerator.MapLists[y][x].baseTile.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
         }
     }
 
@@ -142,9 +146,10 @@ public class MouseSelect : MonoBehaviour
         {
             Selecting = false;
             SelectedItem.transform.position = RecentSelectedTile.transform.position;
-            Debug.Log(x + ":" + y);
             HexTileMapGenerator.MapLists[y][x].item = SelectedItem;
             ItemManager.Instance.SetItemPos(SelectedItem.GetComponent<ItemPos>(), x, y);
+            TileMapManager.Instance.CheckCraftableTile(x, y);
+            HexTileMapGenerator.MapLists[y][x].baseTile.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
             SelectedItem = null;
         }
     }

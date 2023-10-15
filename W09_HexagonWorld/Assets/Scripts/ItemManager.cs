@@ -18,6 +18,7 @@ public class ItemManager : Singleton<ItemManager>
         GameObject item = Instantiate(ItemPrefabs[0]);
         SetItemPos(item.GetComponent<ItemPos>(), x, y);
         item.transform.position = position;
+        HexTileMapGenerator.MapLists[y][x].item = item;
         return item;
     }
     public GameObject SpawnItem(int index, Vector2 position, int x, int y)
@@ -25,6 +26,17 @@ public class ItemManager : Singleton<ItemManager>
         GameObject item = Instantiate(ItemPrefabs[index]);
         SetItemPos(item.GetComponent<ItemPos>(), x, y);
         item.transform.position = position;
+        HexTileMapGenerator.MapLists[y][x].item = item;
+        return item;
+    }
+    public GameObject SpawnItem(GameObject targetItem, Vector2 position, int x, int y)
+    {
+        if (targetItem == null)
+            return null;
+        GameObject item = Instantiate(targetItem);
+        SetItemPos(item.GetComponent<ItemPos>(), x, y);
+        item.transform.position = position;
+        HexTileMapGenerator.MapLists[y][x].item = item;
         return item;
     }
 
