@@ -17,6 +17,7 @@ public class MouseSelect : MonoBehaviour
     Color originColor;
     int x, y;
     bool Selecting = false;
+    private Vector3 dragOrigin;
     void Awake()
     {
         originColor = GetComponent<MeshRenderer>().material.color;
@@ -77,6 +78,7 @@ public class MouseSelect : MonoBehaviour
             {
                 Debug.Log("빈공간!");
                 SelectedItem = null;
+                dragOrigin = Input.mousePosition;
                 CombineItems();
             }
         }
@@ -86,15 +88,17 @@ public class MouseSelect : MonoBehaviour
     {
         if (HexTileMapGenerator.MapLists[y][x].item == null && TileMapManager.Instance.CheckAroundSixTiles(x, y))
         {
-            Debug.Log("6개 존재 확인!");
-            //조합법을 읽고 하나를 생성
             GameObject craftedItem = CraftingManager.Instance.TargetPositionTileToRecipeResult(x, y);
-            ItemManager.Instance.SpawnItem(craftedItem, RecentSelectedTile.transform.position, x, y);
-            Debug.Log("아이템 스폰!");
-            
-            //주위의 6개의 타일에 있던 정보와 object 제거함
-            TileMapManager.Instance.DeleteAroundSixTiles(x, y);
-            HexTileMapGenerator.MapLists[y][x].baseTile.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
+            if (craftedItem != null)
+            {
+                ItemManager.Instance.SpawnItem(craftedItem, RecentSelectedTile.transform.position, x, y);
+                if (craftedItem.GetComponent<RandomBox>())
+                {
+                    craftedItem.GetComponent<RandomBox>().ItemList = ItemManager.Instance.ReturnItemPrefabs(TileMapManager.Instance.ReturnAroundSixItems(x, y));
+                }
+                TileMapManager.Instance.DeleteAroundSixTiles(x, y);
+                HexTileMapGenerator.MapLists[y][x].baseTile.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
+            }
         }
     }
 
@@ -106,8 +110,8 @@ public class MouseSelect : MonoBehaviour
         }
         else if (CanDragingCamera())
         {
-            Vector2 movement = prevMousePosition - mousePosition;
-            Camera.main.transform.Translate(new Vector3(movement.x, movement.y, 0) * Time.deltaTime * 100f);
+            Vector2 movement = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
+            Camera.main.transform.Translate(new Vector3(movement.x, movement.y, 0) * Time.deltaTime * 10f, Space.World);
         }
     }
 

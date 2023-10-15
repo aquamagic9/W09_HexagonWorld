@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RandomBox : MonoBehaviour
 {
-    [SerializeField] List<GameObject> ItemList;
+    [SerializeField] public List<GameObject> ItemList;
     [SerializeField] float spawnTime = 1f;
     [SerializeField] Transform gaugeBar;
     float time = 0f;
@@ -30,14 +30,12 @@ public class RandomBox : MonoBehaviour
 
     void CreateItem()
     {
-        int randomIndex = Random.Range(0, 6);
-        //ItemList[randomIndex];
+        int randomIndex = Random.Range(0, ItemList.Count);
         ItemPos itemPos = this.transform.GetComponent<ItemPos>();
         Vector2 targetPos = TileMapManager.Instance.ReturnAroundEmptyPosition(itemPos.x, itemPos.y);
         if (targetPos.x != -1)
         {
-            //index를 넘기는 것이 아닌 프리팹을 넘겨서 하는 방식으로 바꾸기.
-            ItemManager.Instance.SpawnItem(randomIndex, HexTileMapGenerator.MapLists[(int)targetPos.y][(int)targetPos.x].baseTile.transform
+            ItemManager.Instance.SpawnItem(ItemList[randomIndex], HexTileMapGenerator.MapLists[(int)targetPos.y][(int)targetPos.x].baseTile.transform
                 .position, (int)targetPos.x, (int)targetPos.y);
         }
     }

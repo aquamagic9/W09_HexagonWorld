@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemManager : Singleton<ItemManager>
 {
     public GameObject[] ItemPrefabs;
-
+    public Transform TrashTransform;
     //public GameObject SpawnItem(GameObject itemPrefab, Vector2 position)
     //{
     //    GameObject item = Instantiate(itemPrefab);
@@ -38,6 +38,26 @@ public class ItemManager : Singleton<ItemManager>
         item.transform.position = position;
         HexTileMapGenerator.MapLists[y][x].item = item;
         return item;
+    }
+
+    public List<GameObject> ReturnItemPrefabs(List<GameObject> lists)
+    {
+        List<GameObject> newLists = new List<GameObject>();
+        foreach (GameObject item in lists)
+        {
+            int i = 0;
+            foreach (GameObject prefab in ItemPrefabs)
+            {
+                if (item.GetComponent<ItemPos>().name.Equals(prefab.GetComponent<ItemPos>().name))
+                {
+                    GameObject temp = Instantiate(ItemPrefabs[i], TrashTransform.position, ItemPrefabs[i].transform.rotation);
+                    newLists.Add(temp);
+                    temp.transform.parent = TrashTransform;
+                }
+                i++;
+            }
+        }
+        return newLists;
     }
 
     public void SetItemPos(ItemPos item, int x, int y)

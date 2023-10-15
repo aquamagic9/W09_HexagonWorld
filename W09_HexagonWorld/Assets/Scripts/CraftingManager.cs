@@ -7,6 +7,7 @@ public class CraftingManager : Singleton<CraftingManager>
 {
     public string[] recipes;
     public GameObject[] recipeResults;
+    public GameObject RandomBoxPrefab;
 
     public GameObject TargetPositionTileToRecipeResult(int targetX, int targetY)
     {
@@ -15,8 +16,10 @@ public class CraftingManager : Singleton<CraftingManager>
 
     public GameObject ReturnRecipeResult(string recipe)
     {
+        if (recipe == null)
+            return null;
         int i = 0;
-        foreach(var rec in recipes)
+        foreach(string rec in recipes)
         {
             if (rec.Equals(recipe))
             {
@@ -24,11 +27,15 @@ public class CraftingManager : Singleton<CraftingManager>
             }
             i++;
         }
-        return null;
+        return RandomBoxPrefab;
     }
 
     public string ItemListsToStringRecipe(List<GameObject> itemLists)
     {
+        if (itemLists.Count != 6)
+        {
+            return null;
+        }
         var lists = itemLists.OrderBy(x => x.GetComponent<ItemPos>().name);
         List<GameObject> orderedList = lists.ToList<GameObject>();
         string recipe = "";

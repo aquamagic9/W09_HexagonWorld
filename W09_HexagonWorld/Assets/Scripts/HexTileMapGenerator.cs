@@ -28,6 +28,8 @@ public class HexTileMapGenerator : MonoBehaviour
     [SerializeField] float tileXOffset = 1.8f;
     [SerializeField] float tileZOffset = 1.565f;
 
+    [SerializeField] Transform trash;
+    [SerializeField] List<GameObject> FirstItemLists;
     
     private void Start()
     {
@@ -37,6 +39,39 @@ public class HexTileMapGenerator : MonoBehaviour
             MapLists.Add(new List<TileInfo>());
         }
         CreateHexTileMap();
+        CreateFirstRandomBox();
+    }
+
+    public void CreateFirstRandomBox()
+    {
+        GameObject randomBox = Instantiate(CraftingManager.Instance.RandomBoxPrefab);
+        randomBox.transform.position = MapLists[6][9].baseTile.transform.position;
+        MapLists[9][6].item = randomBox;
+        randomBox.GetComponent<ItemPos>().x = 9;
+        randomBox.GetComponent<ItemPos>().y = 6;
+        List<GameObject> list = new List<GameObject>();
+        GameObject temp;
+        temp = Instantiate(FirstItemLists[0]);
+        temp.transform.parent = trash;
+        temp.transform.position = trash.position;
+        list.Add(temp);
+
+        temp = Instantiate(FirstItemLists[1]);
+        temp.transform.parent = trash;
+        temp.transform.position = trash.position;
+        list.Add(temp);
+
+        temp = Instantiate(FirstItemLists[2]);
+        temp.transform.parent = trash;
+        temp.transform.position = trash.position;
+        list.Add(temp);
+
+        temp = Instantiate(FirstItemLists[3]);
+        temp.transform.parent = trash;
+        temp.transform.position = trash.position;
+        list.Add(temp);
+
+        randomBox.GetComponent<RandomBox>().ItemList = list;
     }
 
     public void CreateHexTileMap()
