@@ -2,17 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HexTileMapGenerator : MonoBehaviour
 {
+    public class TileInfo
+    {
+        public TileInfo(int x, int y, GameObject item)
+        {
+            this.x = x;
+            this.y = y;
+            this.item = item;
+        }
+        public int x { get; set; }
+        public int y { get; set; }
+        public GameObject item { get; set; }
+    }
+    
+    public static List<List<TileInfo>> MapLists;
     public GameObject hexTilePrefab;
-    [SerializeField] int mapWidth = 25;
-    [SerializeField] int mapHeight = 12;
+    public static int mapWidth = 25;
+    public static int mapHeight = 12;
 
     [SerializeField] float tileXOffset = 1.8f;
     [SerializeField] float tileZOffset = 1.565f;
 
+    
     private void Start()
     {
+        MapLists = new List<List<TileInfo>>();
+        for (int i = 0; i < mapHeight; i++)
+        {
+            MapLists.Add(new List<TileInfo>());
+        }
         CreateHexTileMap();
     }
 
@@ -23,6 +44,7 @@ public class HexTileMapGenerator : MonoBehaviour
             for (int y = 0; y < mapHeight; y++)
             {
                 GameObject TempGO = Instantiate(hexTilePrefab);
+                
                 if (y % 2 == 0)
                 {
                     TempGO.transform.position = SetStartPosition(new Vector3(x * tileXOffset, y * tileZOffset, 0));
@@ -31,8 +53,11 @@ public class HexTileMapGenerator : MonoBehaviour
                 {
                     TempGO.transform.position = SetStartPosition(new Vector3(x * tileXOffset + tileXOffset / 2, y * tileZOffset, 0));
                 }
-
                 SetTileInfo(TempGO, x, y);
+                
+                TileInfo TempTile = new TileInfo(x, y, null);
+                MapLists[y].Add(TempTile);
+
             }
         }
     }
